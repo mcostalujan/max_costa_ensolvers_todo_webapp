@@ -1,2 +1,17 @@
-# max_costa_ensolvers_todo_webapp
+# TO-DO WebApp by Max Costa
+
+Technologies used:
+ # MySQL 8.0.23
+ # Spring Boot 2.6.3
+ # Angular 13.0.4
+
+--------------------------------
+Default username and password:
+ # username : admin
+ # password : admin123
  
+--------------------------------
+
+Deployed WebApp here -> https://ensolvers-frontend-todowebapp.web.app/
+
+NOTE: I used Heroku for the back-end deployment and Firebase for the front-end.
