@@ -1,7 +1,7 @@
 # TO-DO WebApp by Max Costa
 
 Technologies used:
- # MySQL 8.0.23
+ # MySQL 8.0.23 (with JPA)
  # Spring Boot 2.6.3
  # Angular 13.0.4
 
