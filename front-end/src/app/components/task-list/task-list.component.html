@@ -1,0 +1,223 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Concert+One&display=swap");
+</style>
+<body class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4
+              style="
+                font-family: 'Concert One', cursive;
+                font-size: 35px;
+                text-align: center;
+              "
+            >
+              Folders > {{ currentFolderName }}
+            </h4>
+            <div class="row" style="margin-left: 0px">
+              <button
+                (click)="onRegresar()"
+                class="btn btn-warning col-sm-3 col-xl-2 col-lg-3"
+                id="goBackButton"
+              >
+                <i class="fa fa-arrow-circle-left"></i> Go back
+              </button>
+              <button
+                type="button"
+                class="btn btn-info col-sm-4 col-xl-3 offset-xl-7 col-lg-3 offset-lg-7"
+                id="addTaskButton"
+                data-toggle="modal"
+                data-target="#addTodoItemModal"
+              >
+                <i class="fa fa-plus"></i> Add task
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="table-rwd">
+                <thead>
+                  <tr>
+                    <th>Done</th>
+                    <th>Name</th>
+                    <th>Edit</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tempTodoItem of todoItems">
+                    <td align="center">
+                      <input
+                        type="checkbox"
+                        [checked]="tempTodoItem.isDone"
+                        (change)="changeStatus(tempTodoItem.idTodoItem)"
+                      />
+                    </td>
+                    <td align="center">
+                      {{ tempTodoItem.descTodoItem }}
+                    </td>
+                    <td align="center">
+                      <button
+                        class="btn btn-outline-info"
+                        (click)="onEditTodoItem(tempTodoItem)"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </td>
+                    <td align="center">
+                      <button
+                        class="btn btn-outline-danger"
+                        (click)="onDeleteTodoItem(tempTodoItem?.idTodoItem)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button
+              [hidden]="true"
+              type="button"
+              id="openTodoItemEdit"
+              data-toggle="modal"
+              data-target="#editTodoItemModal"
+            ></button>
+
+            <div
+              class="modal draggable fade bd-example-modal-lg"
+              id="editTodoItemModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-center">
+                      Edit Task: {{ editTodoItem?.descTodoItem }}
+                    </h5>
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="">
+                      <form #editTodoItemForm="ngForm">
+                        <div class="form-group">
+                          <label for="descTodoItem">Name</label>
+                          <input
+                            type="text"
+                            name="descTodoItem"
+                            required
+                            [(ngModel)]="editTodoItem.descTodoItem"
+                            class="form-control"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                      id="closeEditTodoItemModalButton"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      (click)="onUpdateTodoItem(true)"
+                      [disabled]="editTodoItemForm.invalid"
+                      class="btn btn-primary"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- model add todoItem -->
+            <div
+              class="modal draggable fade bd-example-modal-lg"
+              id="addTodoItemModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-center">New Task</h5>
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div>
+                      <form
+                        #newTodoItemForm="ngForm"
+                        (ngSubmit)="onAddNewTodoItem(newTodoItemForm)"
+                      >
+                        <div class="form-group">
+                          <label for="descTodoItem">Name</label>
+                          <input
+                            type="text"
+                            name="descTodoItem"
+                            required
+                            ngModel
+                            class="form-control"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          style="display: none"
+                          id="new-todoItem-save"
+                        ></button>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                      id="new-todoItem-close"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      (click)="saveNewTodoItem()"
+                      [disabled]="newTodoItemForm.invalid"
+                      class="btn btn-primary"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

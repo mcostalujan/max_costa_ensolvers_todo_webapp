@@ -1,0 +1,226 @@
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Concert+One&display=swap");
+</style>
+<body class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-12">
+        <div class="card" >
+          <div class="card-header">
+            <h4
+              style="
+                font-family: 'Concert One', cursive;
+                font-size: 40px;
+                text-align: center;
+              "
+            >
+              Folders
+            </h4>
+            <div class="row" style="margin-left: 0px">
+              <button
+                style="cursor: pointer"
+                class="btn btn-danger col-sm-3 col-xl-2 col-lg-3"
+                (click)="onLogOut()"
+                id="logOutButton"
+              >
+                Log Out
+              </button>
+              <br />
+              <button
+                type="button"
+                class="btn btn-info col-sm-4 col-xl-3 offset-xl-7 col-lg-3 offset-lg-7"
+                id="addFolderButton"
+                data-toggle="modal"
+                data-target="#addItemGroupModal"
+              >
+                <i class="fa fa-plus"></i> Add Folder
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-container">
+              <table class="table-rwd">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Items</th>
+                    <th>Edit</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tempItemGroup of itemGroups">
+                    <td align="center">
+                      <strong>{{ tempItemGroup.descItemGroup }}</strong>
+                    </td>
+                    <td align="center">
+                      <button
+                        class="btn btn-outline-success"
+                        (click)="onManageTodoItems(tempItemGroup?.idItemGroup)"
+                      >
+                        <i class="fas fa-tasks"></i>
+                      </button>
+                    </td>
+                    <td align="center">
+                      <button
+                        class="btn btn-outline-info"
+                        (click)="onEditItemGroup(tempItemGroup)"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </button>
+                    </td>
+                    <td align="center">
+                      <button
+                        class="btn btn-outline-danger"
+                        (click)="onDeleteItemGroup(tempItemGroup?.idItemGroup)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <button
+              [hidden]="true"
+              type="button"
+              id="openItemGroupEdit"
+              data-toggle="modal"
+              data-target="#editItemGroupModal"
+            ></button>
+
+            <div
+              class="modal draggable fade bd-example-modal-lg"
+              id="editItemGroupModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-center">
+                      Edit Folder: {{ editItemGroup?.descItemGroup }}
+                    </h5>
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="">
+                      <form #editItemGroupForm="ngForm">
+                        <div class="form-group">
+                          <label for="descItemGroup">Name</label>
+                          <input
+                            type="text"
+                            name="descItemGroup"
+                            required
+                            [(ngModel)]="editItemGroup.descItemGroup"
+                            class="form-control"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                      id="closeEditItemGroupModalButton"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      (click)="onUpdateItemGroup()"
+                      [disabled]="editItemGroupForm.invalid"
+                      class="btn btn-primary"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- model add itemGroup -->
+            <div
+              class="modal draggable fade bd-example-modal-lg"
+              id="addItemGroupModal"
+              tabindex="-1"
+              role="dialog"
+              aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-center">New Folder</h5>
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div>
+                      <form
+                        #newItemGroupForm="ngForm"
+                        (ngSubmit)="onAddNewItemGroup(newItemGroupForm)"
+                      >
+                        <div class="form-group">
+                          <label for="descItemGroup">Name</label>
+                          <input
+                            type="text"
+                            name="descItemGroup"
+                            required
+                            ngModel
+                            class="form-control"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          style="display: none"
+                          id="new-itemGroup-save"
+                        ></button>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                      id="new-itemGroup-close"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      (click)="saveNewItemGroup()"
+                      [disabled]="newItemGroupForm.invalid"
+                      class="btn btn-primary"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
